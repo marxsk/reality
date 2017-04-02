@@ -50,6 +50,8 @@ with open('topreality') as fh:
 
         #info["location_district"] => je v zátvorke v location_raw
 
+        info["update_date"] = ad.find('span', class_='date').string
+
         if ad.find('span', class_='areas'):
             content = ad.find('span', class_='areas').contents
 

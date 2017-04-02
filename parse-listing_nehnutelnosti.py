@@ -19,6 +19,10 @@ with open('pozemky') as fh:
         info["type"] = None
         info["offer"] = "sale"
 
+        info["update_date"] = ad.find_all('p', class_='grey')[1].find('span').string.strip()
+        # @note: 1.1.17 -> 1.1.2017
+        info["update_date"] = re.sub('(..)$', '20\\1', info["update_date"])
+
         if ad.find('span', class_='tlste red'):
             price_raw = ad.find('span', class_='tlste red').string
 
@@ -60,9 +64,6 @@ with open('pozemky') as fh:
             elif (u'Záhrada' in raw_category_words):
                 info["type"] = u"záhrada"
 
-        ## @note:
-        ##	info["size"] je veľkosť pozemku pre pozemky; úžitková plocha pre byty
-        ## @todo: zrejme staci to, co mam pre dom
         if (ad.find('p', class_='estate-area') and ad.find('p', class_='estate-area').find('span')):
             area_size_raw = ad.find('p', class_='estate-area').find('span').string
             content = ad.find('p', class_='estate-area').contents
