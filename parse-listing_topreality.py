@@ -40,7 +40,13 @@ with open('topreality') as fh:
         price_raw = ad.find('span', class_='price').find('strong').string
         price_raw = re.sub(r"\s+", "", price_raw, flags=re.UNICODE)
         price_raw = price_raw.strip()[:-1]
-        info["price"] = float(price_raw.replace(',', '.'))
+        price_raw = price_raw.replace(',', '.')
+        if "+" in price_raw:
+            v = price_raw.split('+')
+            info["price"] = float(v[0])
+            info["price_energy"] = float(v[1])
+        else:
+            info["price"] = float(price_raw)
 
         location_raw = ad.find('span', class_='locality').string.strip()
         if not " , " in location_raw:
