@@ -97,6 +97,7 @@ for record in results:
     fields = fields.union(record.keys())
 sorted_fields = sorted(fields)
 
-print (u'Ā'.join(sorted_fields))
+#print (u'Ā'.join(sorted_fields))
 for record in results:
-    csvPrint (sorted_fields, record)
+#    csvPrint (sorted_fields, record)
+    pprint (record)
