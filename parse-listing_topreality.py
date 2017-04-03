@@ -4,12 +4,24 @@
 ## time-spent: 1.5
 
 from bs4 import BeautifulSoup
+from sets import Set
 import unicodedata
 import re
 import sys
 from pprint import pprint
 
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+def csvPrint(fields, record):
+    values = []
+    for f in fields:
+        values.append(unicode(record.get(f, '')))
+
+    print (u'Ā'.join(values))
+
 soup = BeautifulSoup(sys.stdin, 'html.parser')
+results = []
 
 for ad in soup.find_all('div', class_="estate"):
     info = {}
@@ -69,5 +81,14 @@ for ad in soup.find_all('div', class_="estate"):
             value = (content[x+1].contents[0][:-1].strip())
             value = re.sub(r"\s+", "", value, flags=re.UNICODE)
             info['size_' + name] = float(value)
+    results.append(info)
 
-    pprint (info)
+## CSV EXPORT
+fields = Set([])
+for record in results:
+    fields = fields.union(record.keys())
+sorted_fields = sorted(fields)
+
+print (u'Ā'.join(sorted_fields))
+for record in results:
+    csvPrint (sorted_fields, record)
