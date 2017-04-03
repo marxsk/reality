@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding=utf-8
 
-## time-spent: 2+1+1+0.5
+## time-spent: 2+1+1+0.5+3
 
 from bs4 import BeautifulSoup
 import unicodedata
