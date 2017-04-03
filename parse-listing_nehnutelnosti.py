@@ -2,22 +2,14 @@
 # coding=utf-8
 
 ## time-spent: 2+1+1+0.5+3
-from bs4 import BeautifulSoup
-from sets import Set
-import unicodedata
 import re
 import sys
-from pprint import pprint
+import reality
+import unicodedata
+from bs4 import BeautifulSoup
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
-def csvPrint(fields, record):
-    values = []
-    for f in fields:
-        values.append(unicode(record.get(f, '')))
-
-    print (u'Ā'.join(values))
 
 soup = BeautifulSoup(sys.stdin, 'html.parser')
 results = []
@@ -91,13 +83,7 @@ for ad in soup.find_all('div', class_="inzerat"):
 
     # @todo: realitka? - jednoducho sa da vytiahnut logo -> URL na web
 
-## CSV EXPORT
-fields = Set([])
-for record in results:
-    fields = fields.union(record.keys())
-sorted_fields = sorted(fields)
-
-#print (u'Ā'.join(sorted_fields))
-for record in results:
-#    csvPrint (sorted_fields, record)
-    pprint (record)
+if len(sys.argv) > 1 and sys.argv[1] == 'csv':
+    reality.printAdv(results, 'csv')
+else:
+    reality.printAdv(results, None)

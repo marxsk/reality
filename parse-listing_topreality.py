@@ -2,23 +2,13 @@
 # coding=utf-8
 
 ## time-spent: 1.5
-
-from bs4 import BeautifulSoup
-from sets import Set
-import unicodedata
 import re
 import sys
-from pprint import pprint
+import reality
+from bs4 import BeautifulSoup
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
-def csvPrint(fields, record):
-    values = []
-    for f in fields:
-        values.append(unicode(record.get(f, '')))
-
-    print (u'Ā'.join(values))
 
 soup = BeautifulSoup(sys.stdin, 'html.parser')
 results = []
@@ -29,7 +19,7 @@ for ad in soup.find_all('div', class_="estate"):
     info["title"] = ad.find('h2').find('a').string.strip()
     info["url"] = ad.find('h2').find('a')['href']
     info["agency"] = ad.find('ul').find_all('li')[2].string
-    info["condition"] = '#missing?' 
+    info["condition"] = '#missing?'
 
     raw_category = ad.find('ul').find_all('li')[0].string
     raw_category_words = raw_category.split(' ')
@@ -39,14 +29,14 @@ for ad in soup.find_all('div', class_="estate"):
         info["rooms"] = raw_category_words[0]
         info["type"] = "byt"
 
-    if (len(raw_category_words) > 3):
-        if ('dom' == raw_category_words[1]):
+    if len(raw_category_words) > 3:
+        if 'dom' == raw_category_words[1]:
             info["type"] = "dom"
-        elif ('pozemok' in raw_category_words):
+        elif 'pozemok' in raw_category_words:
             info["type"] = "pozemok"
-        elif ('Pozemok' in raw_category_words):
+        elif 'Pozemok' in raw_category_words:
             info["type"] = "pozemok"
-        elif (u'Záhrada' in raw_category_words):
+        elif u'Záhrada' in raw_category_words:
             info["type"] = u"záhrada"
 
     if not ad.find('span', class_='price').find('strong'):
@@ -64,7 +54,7 @@ for ad in soup.find_all('div', class_="estate"):
             info["price"] = float(price_raw)
 
     location_raw = ad.find('span', class_='locality').string.strip()
-    if not " , " in location_raw:
+    if " , " not in location_raw:
         info["location_city"] = location_raw
     else:
         (info["location_street"], info["location_city"]) = location_raw.split(" , ")
@@ -83,12 +73,7 @@ for ad in soup.find_all('div', class_="estate"):
             info['size_' + name] = float(value)
     results.append(info)
 
-## CSV EXPORT
-fields = Set([])
-for record in results:
-    fields = fields.union(record.keys())
-sorted_fields = sorted(fields)
-
-print (u'Ā'.join(sorted_fields))
-for record in results:
-    csvPrint (sorted_fields, record)
+if len(sys.argv) > 1 and sys.argv[1] == 'csv':
+    reality.printAdv(results, 'csv')
+else:
+    reality.printAdv(results, None)
