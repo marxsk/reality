@@ -36,10 +36,22 @@ for item in soup.find('div', class_='properties').find('ul').find_all('li'):
         info["floor"] = current
         if max:
             info["floor_max"] = max
+    elif u'plocha' in prop:
+        info['area_usable'] = item.find('strong').contents[0][:-2]
     else:
-        info["prop"] = item.find('strong').string
-    print
+        info[prop] = item.find('strong').string
 
 info["text"] = soup.find('p', itemprop='description')
+
+## unification
+reality.renameKey(info, u'Úžitková plocha', 'area_usable')
+reality.renameKey(info, u'Ulica', 'street')
+reality.renameKey(info, u'Identifikačné číslo:', 'id_estate')
+reality.renameKey(info, u'Stav nehnuteľnosti:', 'condition')
+reality.renameKey(info, u'Výťah', 'attr_elevator')
+reality.renameKey(info, u'Balkón / loggia', 'attr_balcony')
+reality.renameKey(info, u'Pivnica', 'attr_cellar')
+
+info.pop(u'Aktualizácia')
 
 reality.printAdv([info], 'text')

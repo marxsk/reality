@@ -35,5 +35,17 @@ for item in soup.find('div', id='params').find_all('p', {'class':['paramNo0', 'p
     elif prop == u'Úžitková plocha:':
         info[prop] = info[prop][:-3]
 
+## unification
+reality.renameKey(info, 'Cena:', 'price')
+reality.renameKey(info, 'Typ:', 'offer')
+reality.renameKey(info, 'Druh:', 'category')
+reality.renameKey(info, 'Stav:', 'condition')
+reality.renameKey(info, u'Úžitková plocha:', 'area_usable')
+
+## @todo: chýba URL / identifikátor
+
+info['price_currency'] = u'EUR'
+info.pop(u'Dátum aktualizácie:')
+
 reality.printAdv([info], 'text')
 

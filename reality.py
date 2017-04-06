@@ -22,4 +22,8 @@ def printAdv(records, output_type):
     else:
         for record in records:
             pprint(record)
-    
+
+def renameKey(dic, oldKey, newKey):
+    if oldKey in dic:
+        dic[newKey] = dic[oldKey]
+        dic.pop(oldKey)

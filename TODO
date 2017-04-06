@@ -1,0 +1,17 @@
+[ praca +2 +1 +3 +1.5]
+
+* unifikácia parametrov
+	agency, agency_person
+	price, price_currency
+	offer (Predaj|...)
+	street, city, district (?Lokalita? - neviem ako preniesť)
+	condition (Novostavba|...)
+	text
+	category (2 izbový byt|...)
+	area_usable
+	id_estate [interné ID predajcu - napr. pri novostavbe]
+	attr_elevator, attr_balcony
+	* byt
+		floor, floor_max
+
+
