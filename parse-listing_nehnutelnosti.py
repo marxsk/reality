@@ -19,8 +19,7 @@ for ad in soup.find_all('div', class_="inzerat"):
 
     info["title"] = ad.find('h2').find('a').string.strip()
     info["url"] = ad.find('h2').find('a')['href']
-    info["type"] = None
-    info["offer"] = "sale"
+    info["offer"] = "predaj"
 
     info["update_date"] = ad.find_all('p', class_='grey')[1].find('span').string.strip()
     # @note: 1.1.17 -> 1.1.2017
@@ -30,7 +29,7 @@ for ad in soup.find_all('div', class_="inzerat"):
         price_raw = ad.find('span', class_='tlste red').string
 
         if "/mes" in price_raw:
-            info["offer"] = "rent"
+            info["offer"] = u"prenájom"
         price_raw = price_raw.replace('/mes.', '')
         price_raw = re.sub(r"\s+", "", price_raw, flags=re.UNICODE)
         price_raw = price_raw.strip()[:-1]
@@ -55,17 +54,17 @@ for ad in soup.find_all('div', class_="inzerat"):
 
     if (len(raw_category_words) > 3) and ('byt' == raw_category_words[2]):
         info["rooms"] = raw_category_words[0]
-        info["type"] = "byt"
+        info["category"] = "byt"
 
     if (len(raw_category_words) > 3):
         if ('dom' == raw_category_words[1]):
-            info["type"] = "dom"
+            info["category"] = "dom"
         elif ('pozemok' in raw_category_words):
-            info["type"] = "pozemok"
+            info["category"] = "pozemok"
         elif ('Pozemok' in raw_category_words):
-            info["type"] = "pozemok"
+            info["category"] = "pozemok"
         elif (u'Záhrada' in raw_category_words):
-            info["type"] = u"záhrada"
+            info["category"] = u"záhrada"
 
     if (ad.find('p', class_='estate-area') and ad.find('p', class_='estate-area').find('span')):
         area_size_raw = ad.find('p', class_='estate-area').find('span').string
@@ -75,6 +74,10 @@ for ad in soup.find_all('div', class_="inzerat"):
             content[x+1] = (''.join((c for c in unicodedata.normalize('NFD', content[x+1]) if unicodedata.category(c) != 'Mn')))
 
         info['size_' + content[x+1]] = float(re.sub(r"\s+", "", content[x].string, flags=re.UNICODE)[:-2])
+
+    reality.renameKey(info, 'size_uzit', 'area_usable')
+    reality.renameKey(info, 'size_pozemok', 'area_estate')
+    reality.renameKey(info, 'size_zastav', 'area_built')
 
     results.append(info)
     # @todo: dom> izby, (chalupa?)

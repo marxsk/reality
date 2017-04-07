@@ -8,7 +8,8 @@
 	condition (Novostavba|...)
 	text
 	category (2 izbový byt|...)
-	area_usable
+	area_usable, area_estate, area_built
+	rooms
 	id_estate [interné ID predajcu - napr. pri novostavbe]
 	attr_elevator, attr_balcony
 	* byt
