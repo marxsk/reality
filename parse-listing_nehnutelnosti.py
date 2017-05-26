@@ -42,7 +42,7 @@ for ad in soup.find_all('div', class_="inzerat"):
     if not "," in location_raw:
         info["location_city"] = location_raw
     else:
-        (info["location_street"], info["location_city"]) = location_raw.split(",")
+        (info["location_street"], info["location_city"]) = location_raw.split(",", 1)
 
     info["location_district"] = ad.find('div', class_="locationText").contents[3].string[1:-1].strip()
 

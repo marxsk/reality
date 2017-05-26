@@ -18,7 +18,8 @@ for ad in soup.find_all('div', class_="estate"):
 
     info["title"] = ad.find('h2').find('a').string.strip()
     info["url"] = ad.find('h2').find('a')['href']
-    info["agency"] = ad.find('ul').find_all('li')[2].string
+    if (len(ad.find('ul').find_all('li')) > 2):
+        info["agency"] = ad.find('ul').find_all('li')[2].string
 
     raw_category = ad.find('ul').find_all('li')[0].string
     raw_category_words = raw_category.split(' ')
