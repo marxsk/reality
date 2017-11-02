@@ -6,12 +6,13 @@ import re
 import sys
 import reality
 import unicodedata
+import lxml
 from bs4 import BeautifulSoup
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-soup = BeautifulSoup(sys.stdin, 'html.parser')
+soup = BeautifulSoup(sys.stdin, 'lxml')
 results = []
 
 for ad in soup.find_all('div', class_="inzerat"):

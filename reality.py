@@ -9,8 +9,13 @@ def csvPrint(fields, record):
 
     print(u'Ā'.join(values))
 
-def printAdv(records, output_type):
-    if output_type == 'csv':
+def printAdv(records, output_type, columns = None):
+    if columns:
+        sorted_fields = columns
+        print (u'Ā'.join(sorted_fields))
+        for record in records:
+            csvPrint(sorted_fields, record)
+    elif output_type == 'csv':
         fields = Set([])
         for record in records:
             fields = fields.union(record.keys())

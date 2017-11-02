@@ -14,9 +14,13 @@ soup = BeautifulSoup(sys.stdin, 'html.parser')
 
 info = {}
 
+columns = ["url", "title", "text", "agency", "agency_person", "price", "price_currency", "type", "offer", "floor", "floor_max", "area_usable", "street", "id_estate", "condition", "attr_elevator", "attr_balcony", "attr_cellar"]
+
 info["title"] = soup.find('h1').string.strip()
-info["agency"] = soup.find('div', class_='contact').find('strong').string.strip()
-info["agency_person"] = soup.find('div', class_='contactBox').find('strong').string.strip()
+
+if soup.find('div', class_='contact'):
+    info["agency"] = soup.find('div', class_='contact').find('strong').string.strip()
+    info["agency_person"] = soup.find('div', class_='contactBox').find('strong').string.strip()
 
 for item in soup.find('div', class_='properties').find('ul').find_all('li'):
     prop = item.find('span').string.strip()
@@ -24,7 +28,7 @@ for item in soup.find('div', class_='properties').find('ul').find_all('li'):
     if prop == '':
         continue
 
-    if prop == u'Cena vrátane provízie':
+    if prop in [u'Cena vrátane provízie', u'Cena']:
         info["price"] = item.find('meta', itemprop='price').attrs['content']
         info["price_currency"] = item.find('meta', itemprop='currency').attrs['content']
     elif prop == u'Kategória':
@@ -41,7 +45,8 @@ for item in soup.find('div', class_='properties').find('ul').find_all('li'):
     else:
         info[prop] = item.find('strong').string
 
-info["text"] = soup.find('p', itemprop='description')
+info["text"] = unicode(soup.find('p', itemprop='description')).replace("\n", " ").replace("\r", " ")
+info["url"] = sys.argv[1]
 
 ## unification
 reality.renameKey(info, u'Úžitková plocha', 'area_usable')
@@ -52,6 +57,7 @@ reality.renameKey(info, u'Výťah', 'attr_elevator')
 reality.renameKey(info, u'Balkón / loggia', 'attr_balcony')
 reality.renameKey(info, u'Pivnica', 'attr_cellar')
 
+
 info.pop(u'Aktualizácia')
 
-reality.printAdv([info], 'text')
+reality.printAdv([info], 'csv', columns)
