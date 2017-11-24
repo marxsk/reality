@@ -33,4 +33,5 @@ do
 	fi
 done
 
-exit 1
+echo "Este tam su dalsie stranky"
+exit 0

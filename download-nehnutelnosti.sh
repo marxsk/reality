@@ -5,7 +5,8 @@ DATAFILE="nehnutelnosti.data"
 
 wget -O - --header="User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:23.0) Gecko/20100101 Firefox/23.0" \
 	--header="Accept: image/png,image/*;q=0.8,*/*;q=0.5" \
-	--header="Accept-Language: en-US,en;q=0.5" --header="Accept-Encoding: gzip, deflate" "$URL_NEHNUTELNOSTI" | gunzip - > $DATAFILE
+	--header="Accept-Language: en-US,en;q=0.5" --header="Accept-Encoding: gzip, deflate" "$URL_NEHNUTELNOSTI" | gunzip | \
+	./parse-listing_nehnutelnosti.py csv 
 sleep 1
 
 PAGE=1
@@ -18,13 +19,16 @@ do
 	wget -O - --header="User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:23.0) Gecko/20100101 Firefox/23.0" \
 		-w 10 --random-wait \
 		--header="Accept: image/png,image/*;q=0.8,*/*;q=0.5" \
-		--header="Accept-Language: en-US,en;q=0.5" --header="Accept-Encoding: gzip, deflate" "$URL" | gunzip - >> $DATAFILE
+		--header="Accept-Language: en-US,en;q=0.5" --header="Accept-Encoding: gzip, deflate" "$URL" | gunzip - >> $DATAFILE.$PAGE
 
-	cat ${DATAFILE} | ./parse-listing_nehnutelnosti.py | grep update_date | sed '''s/.*u\(.*\),$/\1/''' | sed "s/'//g" | ./delta-time.py 2;
+	cat ${DATAFILE}.${PAGE} | ./parse-listing_nehnutelnosti.py csv
+
+	cat ${DATAFILE}.${PAGE} | ./parse-listing_nehnutelnosti.py | grep update_date | sed '''s/.*u\(.*\),$/\1/''' | sed "s/'//g" | ./delta-time.py 2;
 
 	if [ $? -eq 1 ]; then
 		exit 0
 	fi
 done
 
-exit 1
+# Este tam su dalsie stranky
+exit 0
