@@ -1,0 +1,12 @@
+postup topreality::
+
+./download-topreality.sh
+cat topreality.data | ./parse-listing_topreality.py csv > topreality-listing.csv
+cat topreality-listing.csv | awk -F 'Ā' '{print $14}' | tail -n +2 > topreality.url
+./download-topreality-detail.sh > topreality-detail.csv
+
+postup nehnutelnosti:
+./download-nehnutelnosti.sh
+cat nehnutelnosti.data | ./parse-listing_nehnutelnosti.py csv > nehnutelnosti.csv
+cat nehnutelnosti.csv | awk -F 'Ā' '{print $14}' | tail -n +2 > nehnutelnosti.url
+./download-nehnutelnosti-detail.sh > nehnutelnosti-detail.csv
